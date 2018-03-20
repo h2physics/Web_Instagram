@@ -55,6 +55,14 @@ public class Post {
     public void setTime(Date time) {
         this.time = time;
     }
+
+    @Override
+    public String toString() {
+        return "Post{" + "id=" + id + ", uid=" + uid + ", image=" + image + ", time=" + time + '}';
+    }
+    
+    
+    
     
     
 }

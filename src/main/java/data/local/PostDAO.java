@@ -8,6 +8,11 @@ package data.local;
 import com.context.DBContext;
 import data.model.Post;
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,10 +33,38 @@ public class PostDAO extends DBContext{
     }
     
     public List<Post> getPosts(String uid){
-        return null;
+        List<Post> posts = new ArrayList<>();
+        
+        String query = "SELECT * FROM [Post] WHERE [uid] = " + uid;
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet set = statement.executeQuery();
+            while(set.next()){
+                String id = set.getString("id");
+                String image = set.getString("image");
+                Date time = set.getDate("time");
+                posts.add(new Post(id, uid, image, time));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return posts;
     }
     
     public int insertPost(Post p){
+        String query = "INSERT INTO [Post] VALUES(?, ?, ?, ?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, p.getId());
+            statement.setString(2, p.getUid());
+            statement.setString(3, p.getImage());
+            statement.setDate(4, new Date(p.getTime().getTime()));
+            return statement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
         return -1;
     }
     

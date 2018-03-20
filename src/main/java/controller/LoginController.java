@@ -5,12 +5,18 @@
  */
 package controller;
 
+import data.local.UserDAO;
+import data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import utils.Constant;
 
 /**
  *
@@ -30,17 +36,39 @@ public class LoginController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
+        UserDAO dbUser = new UserDAO();
+
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet LoginController</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet LoginController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            if (request.getParameter("btnLogin") != null) {
+                String email = request.getParameter("emailLogin");
+                String password = request.getParameter("passwordLogin");
+                User user = dbUser.getUser(email, password);
+//                if (user != null) {
+//                    RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
+//                    HttpSession session = request.getSession();
+//                    session.setAttribute(Constant.SESSION_ID, user.getId());
+//                    dispatcher.forward(request, response);
+//                }
+            } else if (request.getParameter("btnRegister") != null) {
+                String email = request.getParameter("emailRegister");
+                String password = request.getParameter("passwordRegister");
+                String fullname = request.getParameter("fullname");
+                String username = request.getParameter("username");
+                String id = String.valueOf(new Date().getTime());
+
+                User user = new User(id, fullname, username, email, password);
+                int row = dbUser.insertUser(user);
+                if (row >= 0) {
+                    HttpSession session = request.getSession();
+                    session.setAttribute(Constant.SESSION_ID, id);
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
+                    dispatcher.forward(request, response);
+                }
+
+            }
         }
     }
 

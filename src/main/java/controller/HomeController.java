@@ -5,12 +5,19 @@
  */
 package controller;
 
+import data.local.PostDAO;
+import data.model.Post;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import utils.Constant;
 
 /**
  *
@@ -32,15 +39,14 @@ public class HomeController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet HomeController</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet HomeController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            PostDAO dbPost = new PostDAO();
+            List<Post> posts = dbPost.getPosts("1521169555438");
+            System.out.println(posts.get(0).toString());
+            request.setAttribute(Constant.HOME_LIST_POST, posts);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
+            dispatcher.forward(request, response);
+            
+            
         }
     }
 
