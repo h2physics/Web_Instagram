@@ -18,58 +18,68 @@ import java.util.logging.Logger;
  *
  * @author H2PhySicS
  */
-public class UserDAO extends DBContext{
+public class UserDAO extends DBContext {
+
     private Connection connection;
-    
-    public UserDAO(){
+
+    public UserDAO() {
         try {
             connection = getConnection();
         } catch (Exception ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public User getUser(String id){
+
+    public User getUser(String id) {
         String query = "SELECT * FROM [Users] WHERE [id] = " + id;
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet set = statement.executeQuery();
-            while(set.next()){
+            while (set.next()) {
                 String fullname = set.getString("fullname");
                 String username = set.getString("username");
                 String email = set.getString("email");
-                return new User(id, fullname, username, email);
+                int gender = set.getInt("gender");
+                String phoneNumber = set.getString("phone_number");
+                String website = set.getString("website");
+                String biography = set.getString("biography");
+                String avatar = set.getString("avatar");
+                return new User(id, fullname, username, email, gender, phoneNumber, website, biography, avatar);
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-    
-    public User getUser(String email, String password){
+
+    public User getUser(String email, String password) {
         String query = "SELECT * FROM [Users] WHERE [email]=? AND [password]=?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, email);
             statement.setString(2, password);
             ResultSet set = statement.executeQuery();
-            set.last();
+            set.next();
             int size = set.getRow();
-            
-            System.out.println("Size: " + size);
-//            while(set.next()){
-//                String fullname = set.getString("fullname");
-//                String username = set.getString("username");
-//                String email = set.getString("email");
-//                return new User(id, fullname, username, email);
-//            }
+            if (size >= 1) {
+                String id = set.getString("id");
+                String fullname = set.getString("fullname");
+                String username = set.getString("username");
+                int gender = set.getInt("gender");
+                String phoneNumber = set.getString("phone_number");
+                String website = set.getString("website");
+                String biography = set.getString("biography");
+                String avatar = set.getString("avatar");
+                return new User(id, fullname, username, email, gender, phoneNumber, website, biography, avatar);
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-    
-    public int insertUser(User u){
+
+    public int insertUser(User u) {
         String query = "INSERT INTO [Users] VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -87,11 +97,25 @@ public class UserDAO extends DBContext{
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return -1;
     }
-    
-    public int updateUser(String id, User u){
+
+    public int insertRole(String uid) {
+        String role = "user";
+        String query = "INSERT INTO [Role] VALUES(?, ?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, uid);
+            statement.setString(2, role);
+            return statement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+
+    public int updateUser(String id, User u) {
         return -1;
     }
 }

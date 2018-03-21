@@ -43,9 +43,9 @@ public class HomeController extends HttpServlet {
             List<Post> posts = dbPost.getPosts("1521169555438");
             System.out.println(posts.get(0).toString());
             request.setAttribute(Constant.HOME_LIST_POST, posts);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("user/home.jsp");
             dispatcher.forward(request, response);
-            
+           
             
         }
     }

@@ -5,12 +5,20 @@
  */
 package controller;
 
+import data.local.PostDAO;
+import data.local.UserDAO;
+import data.model.Post;
+import data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import utils.Constant;
 
 /**
  *
@@ -32,15 +40,19 @@ public class ProfileController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ProfileController</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ProfileController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            
+            HttpSession session = request.getSession();
+//            String id = (String) session.getAttribute(Constant.SESSION_ID);
+            String id = "1521169555438";
+            UserDAO dbUser = new UserDAO();
+            User user = dbUser.getUser(id);
+            PostDAO dbPost = new PostDAO();
+            List<Post> posts = dbPost.getPosts(id);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("user/profile.jsp");
+            request.setAttribute("user", user);
+            request.setAttribute("posts", posts);
+            dispatcher.forward(request, response);
+            
         }
     }
 

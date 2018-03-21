@@ -16,6 +16,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <style>
+            
         </style>
     </head>
     <body>
@@ -27,7 +28,7 @@
                 <div class="col-md-6" style="text-align: left">
                     <div style="width: 350px; border: 1px solid #B7B7B7; padding: 30px; margin-top: 30px; background-color: #fafafa" >
                         <h2 style="text-align: center">Instagram</h2>
-                        <form action="LoginController">
+                        <form action="LoginController" method="post">
                             <div class="form-group">
                                 <input type="email" class="form-control" name="emailLogin" placeholder="Email"/>
                             </div>
@@ -39,7 +40,7 @@
                             </p>
                         </form>
                         <p style="text-align: center">Or</p>
-                        <form action="LoginController">
+                        <form action="LoginController" method="post">
                             <div class="form-group">
                                 <input type="email" class="form-control" name="emailRegister" placeholder="Email"/>
                             </div>

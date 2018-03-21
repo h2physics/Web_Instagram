@@ -15,12 +15,14 @@ public class Post {
     private String id;
     private String uid;
     private String image;
+    private String content;
     private Date time;
 
-    public Post(String id, String uid, String image, Date time) {
+    public Post(String id, String uid, String image, String content, Date time) {
         this.id = id;
         this.uid = uid;
         this.image = image;
+        this.content = content;
         this.time = time;
     }
 
@@ -46,6 +48,14 @@ public class Post {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Date getTime() {

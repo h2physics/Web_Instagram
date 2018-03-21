@@ -17,4 +17,7 @@ public class Constant {
     public static final String SESSION_PASSWORD = "password";
     
     public static final String HOME_LIST_POST = "posts";
+    
+    public static final String LOGIN_ERROR = "login_error";
+    public static final String LOGIN_ERROR_MESSAGE = "You need to login first";
 }

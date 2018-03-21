@@ -15,10 +15,10 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid" style="position: relative">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#">Instagram</a>
+                    <a class="navbar-brand" href="HomeController">Instagram</a>
                 </div>
 
-                <form class="navbar-form navbar-left" style="margin-left: 100px" action="HomeController">
+                <form class="navbar-form navbar-left" style="margin-left: 100px" action="HomeController" method="post">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Search">
                     </div>
@@ -27,7 +27,7 @@
 
                 <ul class="nav navbar-nav navbar-right">
                     <li class="active"><a href="#"><img src="image/favorite.png" width="20px" height="20px"/></a></li>
-                    <li class="active"><a href="#"><img src="image/user.png" width="20px" height="20px"/></a></li>
+                    <li class="active"><a href="ProfileController"><img src="image/user.png" width="20px" height="20px"/></a></li>
                 </ul>
             </div>
         </nav>

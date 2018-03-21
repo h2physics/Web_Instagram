@@ -46,12 +46,12 @@ public class LoginController extends HttpServlet {
                 String email = request.getParameter("emailLogin");
                 String password = request.getParameter("passwordLogin");
                 User user = dbUser.getUser(email, password);
-//                if (user != null) {
-//                    RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
-//                    HttpSession session = request.getSession();
-//                    session.setAttribute(Constant.SESSION_ID, user.getId());
-//                    dispatcher.forward(request, response);
-//                }
+                if (user != null) {
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("HomeController");
+                    HttpSession session = request.getSession();
+                    session.setAttribute(Constant.SESSION_ID, user.getId());
+                    dispatcher.forward(request, response);
+                }
             } else if (request.getParameter("btnRegister") != null) {
                 String email = request.getParameter("emailRegister");
                 String password = request.getParameter("passwordRegister");
@@ -61,10 +61,11 @@ public class LoginController extends HttpServlet {
 
                 User user = new User(id, fullname, username, email, password);
                 int row = dbUser.insertUser(user);
-                if (row >= 0) {
+                int rowRole = dbUser.insertRole(id);
+                if (row >= 0 && rowRole >= 0) {
                     HttpSession session = request.getSession();
                     session.setAttribute(Constant.SESSION_ID, id);
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("HomeController");
                     dispatcher.forward(request, response);
                 }
 

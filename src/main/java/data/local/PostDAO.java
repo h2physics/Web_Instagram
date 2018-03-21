@@ -42,8 +42,9 @@ public class PostDAO extends DBContext{
             while(set.next()){
                 String id = set.getString("id");
                 String image = set.getString("image");
+                String content = set.getString("content");
                 Date time = set.getDate("time");
-                posts.add(new Post(id, uid, image, time));
+                posts.add(new Post(id, uid, image, content, time));
             }
         } catch (SQLException ex) {
             Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -52,18 +53,18 @@ public class PostDAO extends DBContext{
     }
     
     public int insertPost(Post p){
-        String query = "INSERT INTO [Post] VALUES(?, ?, ?, ?)";
+        String query = "INSERT INTO [Post] VALUES(?, ?, ?, ?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, p.getId());
             statement.setString(2, p.getUid());
             statement.setString(3, p.getImage());
             statement.setDate(4, new Date(p.getTime().getTime()));
+            statement.setString(5, p.getContent());
             return statement.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
         
         return -1;
     }
