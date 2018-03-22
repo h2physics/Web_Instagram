@@ -12,6 +12,8 @@ import data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -40,19 +42,38 @@ public class ProfileController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            
             HttpSession session = request.getSession();
-//            String id = (String) session.getAttribute(Constant.SESSION_ID);
-            String id = "1521169555438";
-            UserDAO dbUser = new UserDAO();
-            User user = dbUser.getUser(id);
-            PostDAO dbPost = new PostDAO();
-            List<Post> posts = dbPost.getPosts(id);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("user/profile.jsp");
-            request.setAttribute("user", user);
-            request.setAttribute("posts", posts);
+            String id = (String) session.getAttribute(Constant.SESSION_ID);
+
+            if (request.getParameter("uid") != null) {
+                String uid = request.getParameter("uid");
+
+                if (uid.equals(id)) {
+                    navigateProfile(request, response, uid, true);
+                } else {
+                    navigateProfile(request, response, uid, false);
+                }
+            } else {
+                navigateProfile(request, response, id, true);
+            }
+        }
+    }
+
+    private void navigateProfile(HttpServletRequest request, HttpServletResponse response, String currentUserId, boolean isMe) {
+        UserDAO dbUser = new UserDAO();
+        User user = dbUser.getUser(currentUserId);
+        PostDAO dbPost = new PostDAO();
+        List<Post> posts = dbPost.getCurrentUserPost(currentUserId);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("user/profile.jsp");
+        request.setAttribute("user", user);
+        request.setAttribute("posts", posts);
+        request.setAttribute("isMe", isMe);
+        try {
             dispatcher.forward(request, response);
-            
+        } catch (ServletException ex) {
+            Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

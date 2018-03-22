@@ -21,25 +21,51 @@ import java.util.logging.Logger;
  *
  * @author H2PhySicS
  */
-public class PostDAO extends DBContext{
+public class PostDAO extends DBContext {
+
     private Connection connection;
-    
-    public PostDAO(){
+
+    public PostDAO() {
         try {
             connection = getConnection();
         } catch (Exception ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public List<Post> getPosts(String uid){
+
+    public List<Post> getPosts(String uid) {
         List<Post> posts = new ArrayList<>();
-        
-        String query = "SELECT * FROM [Post] WHERE [uid] = " + uid;
+        List<String> idList = getUserRelationship(uid);
+        idList.add(uid);
+        for (String friendId : idList) {
+            String query = "SELECT * FROM [Post] WHERE [uid]=?";
+            try {
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.setString(1, friendId);
+                ResultSet set = statement.executeQuery();
+                while (set.next()) {
+                    String id = set.getString("id");
+                    String image = set.getString("image");
+                    String content = set.getString("content");
+                    Date time = set.getDate("time");
+                    posts.add(new Post(id, friendId, image, content, time));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return posts;
+    }
+
+    public List<Post> getCurrentUserPost(String uid) {
+        List<Post> posts = new ArrayList<>();
+        String query = "SELECT * FROM [Post] WHERE [uid]=?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, uid);
             ResultSet set = statement.executeQuery();
-            while(set.next()){
+            while (set.next()) {
                 String id = set.getString("id");
                 String image = set.getString("image");
                 String content = set.getString("content");
@@ -51,8 +77,8 @@ public class PostDAO extends DBContext{
         }
         return posts;
     }
-    
-    public int insertPost(Post p){
+
+    public int insertPost(Post p) {
         String query = "INSERT INTO [Post] VALUES(?, ?, ?, ?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -65,11 +91,28 @@ public class PostDAO extends DBContext{
         } catch (SQLException ex) {
             Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return -1;
     }
-    
-    public int updatePost(String id, Post p){
+
+    public int updatePost(String id, Post p) {
         return -1;
+    }
+
+    public List<String> getUserRelationship(String uid) {
+        List<String> list = new ArrayList<>();
+        String query = "SELECT [friend_id] FROM [Relationship] WHERE [uid]=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, uid);
+            ResultSet set = statement.executeQuery();
+            while (set.next()) {
+                String friendId = set.getString("friend_id");
+                list.add(friendId);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 }

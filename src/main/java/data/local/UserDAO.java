@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpSession;
+import utils.Constant;
 
 /**
  *
@@ -117,5 +119,73 @@ public class UserDAO extends DBContext {
 
     public int updateUser(String id, User u) {
         return -1;
+    }
+    
+    public boolean checkRelationship(String uid, String friendId){
+        String query = "SELECT * FROM [Relationship] WHERE [uid]=? AND [friend_id]=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, uid);
+            statement.setString(2, friendId);
+            ResultSet set = statement.executeQuery();
+            set.next();
+            int row = set.getRow();
+            if(row > 0){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return false;
+    }
+    
+    public int follow(String uid, String friendId){
+        String query = "INSERT INTO [Relationship] VALUES(?, ?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, uid);
+            statement.setString(2, friendId);
+            return statement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return -1;
+    }
+    
+    public int unfollow(String uid, String friendId){
+        System.out.println("Unfollow");
+        String query = "DELETE [Relationship] WHERE [uid]=? AND [friend_id]=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, uid);
+            statement.setString(2, friendId);
+            return statement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return -1;
+    }
+    
+    public void followAction(String uid, String friendId){
+        if (checkRelationship(uid, friendId)) {
+            unfollow(uid, friendId);
+        } else {
+            follow(uid, friendId);
+        }
+    }
+    
+    public int insertFavoritePost(String uid, String postId){
+        return -1;
+    }
+    
+    public int removeFavoritePost(String uid, String postId){
+        return -1;
+    }
+    
+    public void logout(HttpSession session){
+        session.removeAttribute(Constant.SESSION_ID);
     }
 }

@@ -44,6 +44,7 @@
         </style>
     </head>
     <body>
+        <jsp:useBean id="u" class="data.local.UserDAO"/>
         <div class="container">
             <jsp:include page="menu.jsp"/>
 
@@ -58,14 +59,14 @@
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title">Post</h4>
                             </div>
-                            <form action="Save">
+                            <form action="HomeController" method="post" enctype="multipart/form-data">
                                 <div class="modal-body" style="width: 700px" >
-                                    <input type="textbox" name="writePost" placeholder="Bạn đang nghĩ gì...." width="700px">
+                                    <input type="textbox" name="txtPostContent" placeholder="Bạn đang nghĩ gì...." width="700px">
                                 </div>
                                 <div class="modal-footer">
                                     <input type="file" name="fileupload" value="fileupload" id="fileupload"> 
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary" value="submit">Save changes</button>
+                                    <button type="submit" class="btn btn-primary" value="submit" name="btnUpload">Save changes</button>
                                 </div>
                             </form>
                         </div>
@@ -78,7 +79,10 @@
                     <div class="content content-header" style="padding: 10px; height: 50px">
                         <ul class="nav navbar-nav">
                             <li class="active"><img id="avatar" style="background-image: url('image/default_avatar.jpg')"/></li>
-                            <li class="active" style="margin-left: 10px; margin-top: 5px">Van Hung</li>
+                            
+                            <li class="active" style="margin-left: 10px; margin-top: 5px">
+                                <a href="ProfileController?uid=${p.uid}">${u.getUser(p.uid).fullname}</a>
+                            </li>
                         </ul>
                     </div>
                     <c:if test="${not empty p.content}">

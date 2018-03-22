@@ -33,15 +33,21 @@
                 width: 100px;
                 margin-top: 20px;
             }
+            .logout_button{
+                width: 100px;
+                margin-top: 20px;
+                background-color: red
+            }
             .gallery{
                 margin-bottom: 10px;
             }
         </style>
     </head>
     <body>
+        <jsp:useBean id="u" class="data.local.UserDAO"/>
         <div class="container">
             <jsp:include page="menu.jsp"/>
-           
+
             <div class="header row">
                 <div class="col-md-4">
                     <p style="text-align: center">
@@ -54,7 +60,21 @@
                             <h2>${user.username}</h2>
                         </div>
                         <div class="col-md-8">
-                            <button type="submit" class="follow_button btn btn-default">Follow</button>
+                            <c:if test="${isMe == true}">
+                                <button type="submit" class="follow_button btn btn-default">Setting</button>
+                                <button type="submit" class="logout_button btn btn-default">Log out</button>
+                            </c:if>
+                            <c:if test="${isMe == false}">
+                                <form method="post">
+                                    <c:if test="${u.checkRelationship(id, user.id) == true}">
+                                        <button type="submit" class="follow_button btn btn-default">Following</button>
+                                    </c:if>
+                                    <c:if test="${u.checkRelationship(id, user.id) == false}">
+                                        <button type="submit" class="follow_button btn btn-default">Follow</button>
+                                    </c:if>
+                                </form>
+                            </c:if>
+
                         </div>
                     </div>
 
@@ -93,3 +113,4 @@
         </div>
     </body>
 </html>
+
