@@ -47,10 +47,14 @@ public class LoginController extends HttpServlet {
                 String password = request.getParameter("passwordLogin");
                 User user = dbUser.getUser(email, password);
                 if (user != null) {
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("HomeController");
                     HttpSession session = request.getSession();
                     session.setAttribute(Constant.SESSION_ID, user.getId());
-                    dispatcher.forward(request, response);
+                    if (user.getRole().equalsIgnoreCase(Constant.ROLE_USER)) {
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("HomeController");
+                        dispatcher.forward(request, response);
+                    } else if (user.getRole().equalsIgnoreCase(Constant.ROLE_ADMIN)) {
+                        response.sendRedirect("admin/index.jsp");
+                    }
                 }
             } else if (request.getParameter("btnRegister") != null) {
                 String email = request.getParameter("emailRegister");

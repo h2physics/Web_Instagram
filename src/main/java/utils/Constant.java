@@ -13,13 +13,31 @@ public class Constant {
     public static final String FOLDER_ID = "1XB_SRpqoiD_8PBOxnIXn4AzckoW6bQ0W";
     
     public static final String SESSION_ID = "id";
-    public static final String SESSION_FULLNAME = "full_name";
-    public static final String SESSION_USERNAME = "username";
-    public static final String SESSION_EMAIL = "email";
-    public static final String SESSION_PASSWORD = "password";
+    public static final String SESSION_POSTS = "posts";
+    public static final String SESSION_USER = "user";
+    public static final String SESSION_CURRENT_USER_POSTS = "userPosts";
+    public static final String SESSION_IS_ME = "isMe";
     
-    public static final String HOME_LIST_POST = "posts";
+    public static final String SESSION_ADMIN_USER = "adminUsers";
+    public static final String SESSION_ADMIN_POST = "adminPosts";
+    public static final String SESSION_ADMIN_COMMENT = "adminComments";
+    public static final String SESSION_ADMIN_RELATIONSHIP = "adminRelas";
+    public static final String SESSION_ADMIN_FAVORITE = "adminFavorites";
     
     public static final String LOGIN_ERROR = "login_error";
     public static final String LOGIN_ERROR_MESSAGE = "You need to login first";
+    
+    public static final String ACTION_FOLLOW = "follow";
+    public static final String ACTION_UNFOLLOW = "unfollow";
+    public static final String ACTION_USER = "user";
+    public static final String ACTION_POST = "post";
+    public static final String ACTION_COMMENT = "comment";
+    public static final String ACTION_RELATIONSHIP = "rela";
+    public static final String ACTION_FAVORITE = "favorite";
+    public static final String ACTION_LOGOUT = "logout";
+    
+    public static final String ROLE_USER = "user";
+    public static final String ROLE_ADMIN = "admin";
+    
+    
 }

@@ -20,6 +20,10 @@ public class User {
     private String website;
     private String biography;
     private String avatar;
+    private String role;
+
+    public User() {
+    }
 
     public User(String email, String password) {
         this.email = email;
@@ -144,6 +148,14 @@ public class User {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
     
     

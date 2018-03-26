@@ -6,11 +6,14 @@
 package data.local;
 
 import com.context.DBContext;
+import data.model.Relationship;
 import data.model.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpSession;
@@ -55,7 +58,7 @@ public class UserDAO extends DBContext {
     }
 
     public User getUser(String email, String password) {
-        String query = "SELECT * FROM [Users] WHERE [email]=? AND [password]=?";
+        String query = "SELECT * FROM [Users] AS a JOIN [Role] as b on [a].id=[b].uid WHERE [email]=? AND [password]=?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, email);
@@ -72,13 +75,69 @@ public class UserDAO extends DBContext {
                 String website = set.getString("website");
                 String biography = set.getString("biography");
                 String avatar = set.getString("avatar");
-                return new User(id, fullname, username, email, gender, phoneNumber, website, biography, avatar);
+                String role = set.getString("role");
+                User user = new User(id, fullname, username, email, gender, phoneNumber, website, biography, avatar);
+                user.setRole(role);
+                return user;
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    public List<User> getUsers(){
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM [Users]";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet set = statement.executeQuery();
+            while(set.next()){
+                String id = set.getString("id");
+                String fullname = set.getString("fullname");
+                String username = set.getString("username");
+                String email = set.getString("email");
+                int gender = set.getInt("gender");
+                String phoneNumber = set.getString("phone_number");
+                String website = set.getString("website");
+                String biography = set.getString("biography");
+                String avatar = set.getString("avatar");
+                users.add(new User(id, fullname, username, email, gender, phoneNumber, website, biography, avatar));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return users;
+    }
+    
+    public List<User> getUsersIncludeRole(){
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM [Users] AS a JOIN [Role] AS b on [a].id=[b].uid";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet set = statement.executeQuery();
+            while(set.next()){
+                String id = set.getString("id");
+                String fullname = set.getString("fullname");
+                String username = set.getString("username");
+                String email = set.getString("email");
+                String password = set.getString("password");
+                int gender = set.getInt("gender");
+                String phoneNumber = set.getString("phone_number");
+                String website = set.getString("website");
+                String biography = set.getString("biography");
+                String avatar = set.getString("avatar");
+                String role = set.getString("role");
+                User user = new User(id, fullname, username, email, gender, phoneNumber, website, biography, avatar);
+                user.setRole(role);
+                user.setPassword(password);
+                users.add(user);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return users;
     }
 
     public int insertUser(User u) {
@@ -102,6 +161,24 @@ public class UserDAO extends DBContext {
 
         return -1;
     }
+    
+    public List<Relationship> getRelationships(){
+        List<Relationship> relationships = new ArrayList<Relationship>();
+        String query = "SELECT * FROM [Relationship]";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet set = statement.executeQuery();
+            while(set.next()){
+                String uid = set.getString("uid");
+                String friendId = set.getString("friend_id");
+                relationships.add(new Relationship(uid, friendId));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return relationships;
+    }
 
     public int insertRole(String uid) {
         String role = "user";
@@ -118,6 +195,23 @@ public class UserDAO extends DBContext {
     }
 
     public int updateUser(String id, User u) {
+        String query = "UPDATE [Users] "
+                + "SET [fullname]=?, [username]=?, [gender]=?, [phone_number]=?, [website]=?, [biography]=?, [avatar]=? "
+                + "WHERE [id]=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, u.getFullname());
+            statement.setString(2, u.getUsername());
+            statement.setInt(3, u.getGender());
+            statement.setString(4, u.getPhoneNumber());
+            statement.setString(5, u.getWebsite());
+            statement.setString(6, u.getBiography());
+            statement.setString(7, null);
+            statement.setString(8, id);
+            return statement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return -1;
     }
     
@@ -141,6 +235,7 @@ public class UserDAO extends DBContext {
     }
     
     public int follow(String uid, String friendId){
+        System.out.println("Follow");
         String query = "INSERT INTO [Relationship] VALUES(?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -187,5 +282,9 @@ public class UserDAO extends DBContext {
     
     public void logout(HttpSession session){
         session.removeAttribute(Constant.SESSION_ID);
+        session.removeAttribute(Constant.SESSION_POSTS);
+        session.removeAttribute(Constant.SESSION_USER);
+        session.removeAttribute(Constant.SESSION_CURRENT_USER_POSTS);
+        session.removeAttribute(Constant.SESSION_IS_ME);
     }
 }

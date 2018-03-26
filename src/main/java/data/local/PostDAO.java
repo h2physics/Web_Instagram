@@ -33,6 +33,26 @@ public class PostDAO extends DBContext {
         }
     }
 
+    public List<Post> getPosts() {
+        List<Post> posts = new ArrayList<>();
+        String query = "SELECT * FROM [Post]";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet set = statement.executeQuery();
+            while (set.next()) {
+                String id = set.getString("id");
+                String uid = set.getString("uid");
+                String image = set.getString("image");
+                String content = set.getString("content");
+                Date time = set.getDate("time");
+                posts.add(new Post(id, uid, image, content, time));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return posts;
+    }
+
     public List<Post> getPosts(String uid) {
         List<Post> posts = new ArrayList<>();
         List<String> idList = getUserRelationship(uid);

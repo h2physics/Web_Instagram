@@ -6,7 +6,7 @@
     </filter>
     <filter-mapping>
         <filter-name>LoginFilter</filter-name>
-        <url-pattern>/admin/*</url-pattern>
+        <!--<url-pattern>/admin/*</url-pattern>-->
         <url-pattern>/user/*</url-pattern>
     </filter-mapping>
     <servlet>
@@ -25,6 +25,14 @@
         <servlet-name>HomeController</servlet-name>
         <servlet-class>controller.HomeController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdateProfileController</servlet-name>
+        <servlet-class>controller.UpdateProfileController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminController</servlet-name>
+        <servlet-class>controller.AdminController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/LoginController</url-pattern>
@@ -40,6 +48,14 @@
     <servlet-mapping>
         <servlet-name>HomeController</servlet-name>
         <url-pattern>/HomeController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateProfileController</servlet-name>
+        <url-pattern>/UpdateProfileController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminController</servlet-name>
+        <url-pattern>/AdminController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

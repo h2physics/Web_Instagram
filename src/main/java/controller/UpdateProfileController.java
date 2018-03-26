@@ -5,29 +5,22 @@
  */
 package controller;
 
-import data.local.PostDAO;
 import data.local.UserDAO;
-import data.model.Post;
 import data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import utils.Constant;
-import utils.WebUtils;
 
 /**
  *
  * @author H2PhySicS
  */
-public class ProfileController extends HttpServlet {
+public class UpdateProfileController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,50 +35,32 @@ public class ProfileController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
+        UserDAO dbUser = new UserDAO();
         HttpSession session = request.getSession();
         String id = (String) session.getAttribute(Constant.SESSION_ID);
-        UserDAO dbUser = new UserDAO();
-
-        if (request.getParameter("uid") != null) {
-            String uid = request.getParameter("uid");
-
-            if (uid.equals(id)) {
-                navigateProfile(request, response, uid, true);
-            } else {
-                navigateProfile(request, response, uid, false);
+        
+        if(request.getParameter("btnUpdate") != null){
+            String name = request.getParameter("txtName");
+            String username = request.getParameter("txtUsername");
+            String website = request.getParameter("txtWebsite");
+            String biography = request.getParameter("txtBiography");
+            String email = request.getParameter("txtEmail");
+            String phoneNumber = request.getParameter("txtPhone");
+            String genderStr = request.getParameter("txtGender");
+            int gender = 0;
+            if(genderStr.equalsIgnoreCase("female")){
+                gender = 1;
             }
-        } else if(request.getParameter("friend_id") != null){
-            String action = request.getParameter("action");
-            String friendId = request.getParameter("friend_id");
-            
-            if(action.equalsIgnoreCase(Constant.ACTION_FOLLOW)){
-                dbUser.follow(id, friendId);
-            } else if(action.equalsIgnoreCase(Constant.ACTION_UNFOLLOW)){
-                dbUser.unfollow(id, friendId);
-            }
-            navigateProfile(request, response, friendId, false);
-            
-        } else if(request.getParameter("action") != null){
-            dbUser.logout(session);
-            response.sendRedirect("login.jsp");
-        } else {
-            navigateProfile(request, response, id, true);
-        }
-    }
-
-    private void navigateProfile(HttpServletRequest request, HttpServletResponse response, String currentUserId, boolean isMe) {
-        UserDAO dbUser = new UserDAO();
-        User user = dbUser.getUser(currentUserId);
-        PostDAO dbPost = new PostDAO();
-        List<Post> posts = dbPost.getCurrentUserPost(currentUserId);
-        HttpSession session = request.getSession();
-        session.setAttribute(Constant.SESSION_USER, user);
-        session.setAttribute(Constant.SESSION_CURRENT_USER_POSTS, posts);
-        session.setAttribute(Constant.SESSION_IS_ME, isMe);
-        try {
-            response.sendRedirect("user/profile.jsp");
-        } catch (IOException ex) {
-            Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
+            User user = new User();
+            user.setFullname(name);
+            user.setUsername(username);
+            user.setWebsite(website);
+            user.setBiography(biography);
+            user.setEmail(email);
+            user.setPhoneNumber(phoneNumber);
+            user.setGender(gender);
+            dbUser.updateUser(id, user);
+            response.sendRedirect("user/update_profile.jsp");
         }
     }
 

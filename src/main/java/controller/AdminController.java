@@ -5,15 +5,16 @@
  */
 package controller;
 
+import data.local.CommentDAO;
 import data.local.PostDAO;
 import data.local.UserDAO;
+import data.model.Comment;
 import data.model.Post;
+import data.model.Relationship;
 import data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,13 +22,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import utils.Constant;
-import utils.WebUtils;
 
 /**
  *
  * @author H2PhySicS
  */
-public class ProfileController extends HttpServlet {
+public class AdminController extends HttpServlet {
+
+    private void clearSession(HttpSession session) {
+        session.removeAttribute(Constant.SESSION_ADMIN_USER);
+        session.removeAttribute(Constant.SESSION_ADMIN_POST);
+        session.removeAttribute(Constant.SESSION_ADMIN_COMMENT);
+        session.removeAttribute(Constant.SESSION_ADMIN_RELATIONSHIP);
+        session.removeAttribute(Constant.SESSION_ADMIN_FAVORITE);
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,49 +51,32 @@ public class ProfileController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
-        String id = (String) session.getAttribute(Constant.SESSION_ID);
-        UserDAO dbUser = new UserDAO();
+        clearSession(session);
+        if (!request.getParameter("action").equalsIgnoreCase(Constant.ACTION_LOGOUT)) {
+            if (request.getParameter("action").equalsIgnoreCase(Constant.ACTION_USER)) {
+                UserDAO dbUser = new UserDAO();
+                List<User> users = dbUser.getUsersIncludeRole();
+                session.setAttribute(Constant.SESSION_ADMIN_USER, users);
+            } else if (request.getParameter("action").equalsIgnoreCase(Constant.ACTION_POST)) {
+                System.out.println("Action post");
+                PostDAO dbPost = new PostDAO();
+                List<Post> posts = dbPost.getPosts();
+                session.setAttribute(Constant.SESSION_ADMIN_POST, posts);
+            } else if (request.getParameter("action").equalsIgnoreCase(Constant.ACTION_COMMENT)) {
+                CommentDAO dbComment = new CommentDAO();
+                List<Comment> comments = dbComment.getComments();
+                session.setAttribute(Constant.SESSION_ADMIN_COMMENT, comments);
+            } else if (request.getParameter("action").equalsIgnoreCase(Constant.ACTION_RELATIONSHIP)) {
+                UserDAO dbUser = new UserDAO();
+                List<Relationship> relationships = dbUser.getRelationships();
+                session.setAttribute(Constant.SESSION_ADMIN_RELATIONSHIP, relationships);
+            } else if (request.getParameter("action").equalsIgnoreCase(Constant.ACTION_FAVORITE)) {
 
-        if (request.getParameter("uid") != null) {
-            String uid = request.getParameter("uid");
-
-            if (uid.equals(id)) {
-                navigateProfile(request, response, uid, true);
-            } else {
-                navigateProfile(request, response, uid, false);
             }
-        } else if(request.getParameter("friend_id") != null){
-            String action = request.getParameter("action");
-            String friendId = request.getParameter("friend_id");
-            
-            if(action.equalsIgnoreCase(Constant.ACTION_FOLLOW)){
-                dbUser.follow(id, friendId);
-            } else if(action.equalsIgnoreCase(Constant.ACTION_UNFOLLOW)){
-                dbUser.unfollow(id, friendId);
-            }
-            navigateProfile(request, response, friendId, false);
-            
-        } else if(request.getParameter("action") != null){
-            dbUser.logout(session);
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("admin/index.jsp");
         } else {
-            navigateProfile(request, response, id, true);
-        }
-    }
-
-    private void navigateProfile(HttpServletRequest request, HttpServletResponse response, String currentUserId, boolean isMe) {
-        UserDAO dbUser = new UserDAO();
-        User user = dbUser.getUser(currentUserId);
-        PostDAO dbPost = new PostDAO();
-        List<Post> posts = dbPost.getCurrentUserPost(currentUserId);
-        HttpSession session = request.getSession();
-        session.setAttribute(Constant.SESSION_USER, user);
-        session.setAttribute(Constant.SESSION_CURRENT_USER_POSTS, posts);
-        session.setAttribute(Constant.SESSION_IS_ME, isMe);
-        try {
-            response.sendRedirect("user/profile.jsp");
-        } catch (IOException ex) {
-            Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
+            session.removeAttribute(Constant.SESSION_ID);
+            response.sendRedirect("login.jsp");
         }
     }
 

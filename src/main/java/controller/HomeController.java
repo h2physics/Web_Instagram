@@ -8,7 +8,10 @@ package controller;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.util.IOUtils;
 import com.google.api.services.drive.Drive;
+import data.local.CommentDAO;
 import data.local.PostDAO;
+import data.local.UserDAO;
+import data.model.Comment;
 import data.model.Post;
 import data.service.GoogleDriveService;
 import java.io.File;
@@ -66,10 +69,7 @@ public class HomeController extends HttpServlet {
         String uid = (String) session.getAttribute(Constant.SESSION_ID);
         PostDAO dbPost = new PostDAO();
         List<Post> posts = dbPost.getPosts(uid);
-        for(Post p: posts){
-            System.out.println(p);
-        }
-        request.setAttribute(Constant.HOME_LIST_POST, posts);
+        session.setAttribute(Constant.SESSION_POSTS, posts);
         if (request.getParameter("btnUpload") != null) {
             String path = request.getServletContext().getRealPath("") + File.separator + "uploadFiles";
             Part part = request.getPart("fileupload");
@@ -100,9 +100,9 @@ public class HomeController extends HttpServlet {
                 String postContent = request.getParameter("txtPostContent");
                 Date time = new Date();
                 dbPost.insertPost(new Post(String.valueOf(time.getTime()), uid, actualLink, postContent, time));
-
-                RequestDispatcher dispatcher = request.getRequestDispatcher("user/home.jsp");
-                dispatcher.forward(request, response);
+                response.sendRedirect("user/home.jsp");
+//                RequestDispatcher dispatcher = request.getRequestDispatcher("user/home.jsp");
+//                dispatcher.forward(request, response);
             } catch (FileNotFoundException exception) {
                 writer.println("Error upload <br/> " + exception.getMessage());
             } finally {
@@ -117,9 +117,29 @@ public class HomeController extends HttpServlet {
                 }
             }
 
+        } else if (request.getParameter("btnComment") != null) {
+            String content = request.getParameter("txtComment");
+            String postId = request.getParameter("txtPostId");
+            Date time = new Date();
+            Comment comment = new Comment(String.valueOf(time.getTime()), uid, postId, content, time);
+            CommentDAO dbComment = new CommentDAO();
+            dbComment.insertComment(comment);
+            response.sendRedirect("user/home.jsp");
+//            RequestDispatcher dispatcher = request.getRequestDispatcher("user/home.jsp");
+//            dispatcher.forward(request, response);
+        } else if (request.getParameter("friend_id") != null) {
+            String friendId = request.getParameter("friend_id");
+            UserDAO dbUser = new UserDAO();
+            if(request.getParameter("action").equalsIgnoreCase(Constant.ACTION_FOLLOW)){
+                dbUser.follow(uid, friendId);
+            } else if(request.getParameter("action").equalsIgnoreCase(Constant.ACTION_UNFOLLOW)){
+                dbUser.unfollow(uid, friendId);
+            }
+            response.sendRedirect("user/home.jsp");
         } else {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("user/home.jsp");
-            dispatcher.forward(request, response);
+            response.sendRedirect("user/home.jsp");
+//            RequestDispatcher dispatcher = request.getRequestDispatcher("user/home.jsp");
+//            dispatcher.forward(request, response);
         }
 //        RequestDispatcher dispatcher = request.getRequestDispatcher("user/home.jsp");
 //        dispatcher.forward(request, response);

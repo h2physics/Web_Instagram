@@ -22,7 +22,6 @@
             .avatar{
                 border-radius: 50%;
                 margin-top: 10px;
-                background-image: url("image/default_avatar.jpg");
                 width: 130px;
                 height: 130px;
                 background-size: cover;
@@ -51,7 +50,7 @@
             <div class="header row">
                 <div class="col-md-4">
                     <p style="text-align: center">
-                        <img class="avatar"/>
+                        <img class="avatar" style="background-image: url('../image/default_avatar.jpg');"/>
                     </p>
                 </div>
                 <div class="col-md-8">
@@ -61,18 +60,16 @@
                         </div>
                         <div class="col-md-8">
                             <c:if test="${isMe == true}">
-                                <button type="submit" class="follow_button btn btn-default">Setting</button>
-                                <button type="submit" class="logout_button btn btn-default">Log out</button>
+                                <a href="update_profile.jsp" class="follow_button btn btn-default">Setting</a>
+                                <a href="../ProfileController?action=logout" class="logout_button btn btn-default">Log out</a>
                             </c:if>
                             <c:if test="${isMe == false}">
-                                <form method="post">
-                                    <c:if test="${u.checkRelationship(id, user.id) == true}">
-                                        <button type="submit" class="follow_button btn btn-default">Following</button>
-                                    </c:if>
-                                    <c:if test="${u.checkRelationship(id, user.id) == false}">
-                                        <button type="submit" class="follow_button btn btn-default">Follow</button>
-                                    </c:if>
-                                </form>
+                                <c:if test="${u.checkRelationship(id, user.id) == true}">
+                                    <a href="../ProfileController?friend_id=${user.id}&action=unfollow" class="follow_button btn btn-default">Following</a>
+                                </c:if>
+                                <c:if test="${u.checkRelationship(id, user.id) == false}">
+                                    <a href="../ProfileController?friend_id=${user.id}&action=follow" class="follow_button btn btn-default">Follow</a>
+                                </c:if>
                             </c:if>
 
                         </div>
@@ -104,7 +101,7 @@
             </div>
             <hr/>
             <div class="content row galerry">
-                <c:forEach var="p" items="${posts}">
+                <c:forEach var="p" items="${userPosts}">
                     <div class="col-md-4" style="padding:0.5em;">
                         <div style="background-image: url(${p.image}); height: 350px; background-size: cover; background-position: center;"></div>
                     </div>
