@@ -50,6 +50,7 @@ public class AdminController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         clearSession(session);
         if (!request.getParameter("action").equalsIgnoreCase(Constant.ACTION_LOGOUT)) {

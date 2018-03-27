@@ -11,6 +11,7 @@ package utils;
  */
 public class Constant {
     public static final String FOLDER_ID = "1XB_SRpqoiD_8PBOxnIXn4AzckoW6bQ0W";
+    public static final String FOLDER_AVATAR_ID = "1rKGMjqJslQfmK2b3NSH9XG13lEI88cw9";
     
     public static final String SESSION_ID = "id";
     public static final String SESSION_POSTS = "posts";

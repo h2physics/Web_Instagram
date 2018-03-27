@@ -55,7 +55,12 @@
             <div class="header row">
                 <div class="col-md-4">
                     <p style="text-align: center">
-                        <img class="avatar" style="background-image: url('../image/default_avatar.jpg');"/>
+                        <c:if test="${user.avatar == null}">
+                            <img class="avatar" style="background-image: url('../image/default_avatar.png');"/>
+                        </c:if>
+                        <c:if test="${user.avatar != null}">
+                            <img class="avatar" style="background-image: url('${user.avatar}');"/>
+                        </c:if>
                     </p>
                 </div>
                 <div class="col-md-8">
@@ -69,9 +74,9 @@
                                     <i class="fas fa-cog"></i> Setting</a>
                                 <a href="../ProfileController?action=logout" type="submit" class="logout_button btn btn-default">
                                     <i class="fas fa-sign-out-alt"></i> Log out</a>
-                            </c:if>
-                            <c:if test="${isMe == false}">
-                                <c:if test="${u.checkRelationship(id, user.id) == true}">
+                                </c:if>
+                                <c:if test="${isMe == false}">
+                                    <c:if test="${u.checkRelationship(id, user.id) == true}">
                                     <a href="../ProfileController?friend_id=${user.id}&action=unfollow" class="follow_button btn btn-default">Following</a>
                                 </c:if>
                                 <c:if test="${u.checkRelationship(id, user.id) == false}">
@@ -84,7 +89,7 @@
 
                     <div class="row">
                         <div class="col-md-4">
-                            <strong>${fn:length(posts)}</strong> posts
+                            <strong>${fn:length(userPosts)}</strong> posts
                         </div>
                         <div class="col-md-4">
                             <strong>1025</strong> followers

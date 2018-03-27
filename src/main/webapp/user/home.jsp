@@ -80,7 +80,12 @@
                         <div class="content" style="margin: 0 auto; border: 1px solid #A0A0A0">
                             <div class="row" style="padding: 15px; height: 70px">
                                 <div class="col-md-1">
-                                    <img id="avatar" style="background-image: url('../image/default_avatar.jpg')"/>
+                                    <c:if test="${u.getUser(p.uid).avatar == null}">
+                                        <img id="avatar" style="background-image: url('../image/default_avatar.png')"/>
+                                    </c:if>
+                                    <c:if test="${u.getUser(p.uid).avatar != null}">
+                                        <img id="avatar" style="background-image: url('${u.getUser(p.uid).avatar}')"/>
+                                    </c:if>
                                 </div>
                                 <div class="col-md-11" style="margin-top: 10px;">
                                     <a class="author" href="../ProfileController?uid=${p.uid}">${u.getUser(p.uid).fullname}</a>
@@ -118,7 +123,12 @@
                 <div class="col-md-4">
                     <div class="row">
                         <div class="col-md-3">
-                            <img id="avatar" style="background-image: url('../image/default_avatar.jpg'); width: 55px; height: 55px; margin-top: 6px;"/>
+                            <c:if test="${u.getUser(id).avatar == null}">
+                                <img id="avatar" style="background-image: url('../image/default_avatar.png'); width: 55px; height: 55px; margin-top: 6px;"/>
+                            </c:if>
+                            <c:if test="${u.getUser(id).avatar != null}">
+                                <img id="avatar" style="background-image: url('${u.getUser(id).avatar}'); width: 55px; height: 55px; margin-top: 6px;"/>
+                            </c:if>
                         </div>
                         <div class="col-md-9">
                             <h4>${u.getUser(id).username}</h4>
@@ -131,7 +141,12 @@
                             <c:if test="${currentUser.id != id}">
                                 <div class="row" style="margin-top: 10px">
                                     <div class="col-md-3">
-                                        <img id="avatar" style="background-image: url('../image/default_avatar.jpg'); width: 55px; height: 55px; "/>
+                                        <c:if test="${currentUser.avatar == null}">
+                                            <img id="avatar" style="background-image: url('../image/default_avatar.png'); width: 55px; height: 55px; "/>
+                                        </c:if>
+                                        <c:if test="${currentUser.avatar != null}">
+                                            <img id="avatar" style="background-image: url('${currentUser.avatar}'); width: 55px; height: 55px; "/>
+                                        </c:if>
                                     </div>
                                     <div class="col-md-5" style="margin-top: 10px;">
                                         <h4>${currentUser.username}</h4>

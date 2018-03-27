@@ -42,11 +42,11 @@
 
                 <ul class="nav navbar-nav navbar-right">
                     <li class="active">
-                        <a style="cursor: pointer"><img src="../image/upload.png" width="20px" height="20px" data-toggle="modal" data-target="#postModal"/></a>
+                        <a style="cursor: pointer" data-toggle="modal" data-target="#postModal"><i class="fas fa-upload" style="width: 20px; height: 20px"></i></a>
 
                     </li>
-                    <li class="active"><a href="#"><img src="../image/favorite.png" width="20px" height="20px"/></a></li>
-                    <li class="active"><a href="../ProfileController"><img src="../image/user.png" width="20px" height="20px"/></a></li>
+                    <li class="active"><a href="#"><i class="fas fa-heart" style="width: 20px; height: 20px"></i></a></li>
+                    <li class="active"><a href="../ProfileController"><i class="fas fa-user" style="width: 20px; height: 20px"></i></a></li>
                 </ul>
             </div>
         </nav>

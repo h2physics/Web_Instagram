@@ -65,14 +65,14 @@ public class HomeController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-        
+
         HttpSession session = request.getSession();
         String uid = (String) session.getAttribute(Constant.SESSION_ID);
         PostDAO dbPost = new PostDAO();
         List<Post> posts = dbPost.getPosts(uid);
         session.setAttribute(Constant.SESSION_POSTS, posts);
         if (request.getParameter("btnUpload") != null) {
-            String path = request.getServletContext().getRealPath("") + File.separator + "uploadFiles";
+            String path = "uploadFiles";
             Part part = request.getPart("fileupload");
             String fileName = WebUtils.extractFileName(part);
             OutputStream output = null;
@@ -100,8 +100,12 @@ public class HomeController extends HttpServlet {
                 String actualLink = "https://docs.google.com/uc?id=" + uploadFile.getId();
                 String postContent = request.getParameter("txtPostContent");
                 Date time = new Date();
-                dbPost.insertPost(new Post(String.valueOf(time.getTime()), uid, actualLink, postContent, time));
-                response.sendRedirect("user/home.jsp");
+                int row = dbPost.insertPost(new Post(String.valueOf(time.getTime()), uid, actualLink, postContent, time));
+                if (row != -1) {
+                    posts = dbPost.getPosts(uid);
+                    session.setAttribute(Constant.SESSION_POSTS, posts);
+                    response.sendRedirect("user/home.jsp");
+                }
             } catch (FileNotFoundException exception) {
                 writer.println("Error upload <br/> " + exception.getMessage());
             } finally {
@@ -127,11 +131,13 @@ public class HomeController extends HttpServlet {
         } else if (request.getParameter("friend_id") != null) {
             String friendId = request.getParameter("friend_id");
             UserDAO dbUser = new UserDAO();
-            if(request.getParameter("action").equalsIgnoreCase(Constant.ACTION_FOLLOW)){
+            if (request.getParameter("action").equalsIgnoreCase(Constant.ACTION_FOLLOW)) {
                 dbUser.follow(uid, friendId);
-            } else if(request.getParameter("action").equalsIgnoreCase(Constant.ACTION_UNFOLLOW)){
+            } else if (request.getParameter("action").equalsIgnoreCase(Constant.ACTION_UNFOLLOW)) {
                 dbUser.unfollow(uid, friendId);
             }
+            posts = dbPost.getPosts(uid);
+            session.setAttribute(Constant.SESSION_POSTS, posts);
             response.sendRedirect("user/home.jsp");
         } else {
             response.sendRedirect("user/home.jsp");

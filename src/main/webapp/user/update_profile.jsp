@@ -15,6 +15,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js" integrity="sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ" crossorigin="anonymous"></script>
         <style>
             #avatar{
                 border-radius: 50%;
@@ -40,8 +41,37 @@
                 padding: 7px;
                 padding-left: 13px;
             }
+            .btn-file {
+                position: relative;
+                overflow: hidden;
+            }
+            .btn-file input[type=file] {
+                position: absolute;
+                top: 0;
+                right: 0;
+                min-width: 100%;
+                min-height: 100%;
+                font-size: 100px;
+                text-align: left;
+                filter: alpha(opacity=0);
+                opacity: 0;
+                outline: none;
+                background: white;
+                cursor: inherit;
+                display: block;
+            }
             strong{
                 text-align: right;
+            }
+            #scroll_box{
+                height: 120px;
+                width: 200px;
+                display: auto;
+                border: 1px soli #CCCCCC;
+                margin: 1em 0;
+                border-color: black;
+                border-style: black;
+                position: absolute;
             }
         </style>
     </head>
@@ -49,18 +79,30 @@
         <div class="container">
             <jsp:include page="menu.jsp"/>
             <jsp:useBean id="u" class="data.local.UserDAO"/>
+            
             <div class="row">
                 <div class="col-md-3">
 
                 </div>
                 <div class="col-md-6">
-                    <form action="../UpdateProfileController" method="post">
+                    <form action="../UpdateProfileController" method="post" enctype="multipart/form-data">
                         <table style="width: 100%">
                             <tr>
-                                <td class="table_title"><img id="avatar" style="background-image: url('../image/default_avatar.jpg')"/></td>
+                                <td class="table_title">
+                                    <c:if test="${u.getUser(id).avatar == null}">
+                                        <img id="avatar" style="background-image: url('../image/default_avatar.png')"/>
+                                    </c:if>
+                                        <c:if test="${u.getUser(id).avatar != null}">
+                                        <img id="avatar" style="background-image: url('${u.getUser(id).avatar}')"/>
+                                    </c:if>
+                                </td>
                                 <td class="table_content">
                                     <p style="font-size: 1.3em; margin-bottom: 0">${u.getUser(id).username}</p>
-                                    <p style="font-size: 0.9em"><a href="#">Update avatar</a></p>
+                                    <p style="font-size: 0.9em">
+                                        <span class="btn btn-default btn-file" style="background-color: #6EC3C9; color: white">
+                                            Upload avatar <input type="file" name="avatar" value="fileupload" id="fileupload"> 
+                                        </span>
+                                    </p>
                                 </td>
                             </tr>
                             <tr>
@@ -105,8 +147,14 @@
                             <tr>
                                 <td class="table_title"><strong>Gender</strong></td>
                                 <td>
-                                    <input type="radio" name="txtGender" value="Male" checked/> Male
-                                    <input type="radio" name="txtGender" value="Female" style="margin-left: 20px;"/> Male
+                                    <c:if test="${u.getUser(id).gender == 0}">
+                                        <input type="radio" name="txtGender" value="Male" checked/> Male
+                                        <input type="radio" name="txtGender" value="Female" style="margin-left: 20px;"/> Female
+                                    </c:if>
+                                    <c:if test="${u.getUser(id).gender == 1}">
+                                        <input type="radio" name="txtGender" value="Male"/> Male
+                                        <input type="radio" name="txtGender" value="Female" style="margin-left: 20px;" checked=""/> Female
+                                    </c:if>
                                 </td>
                             </tr>
                             <tr>

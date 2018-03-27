@@ -12,6 +12,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -35,7 +36,7 @@ public class PostDAO extends DBContext {
 
     public List<Post> getPosts() {
         List<Post> posts = new ArrayList<>();
-        String query = "SELECT * FROM [Post]";
+        String query = "SELECT * FROM [Post] ORDER BY [time] DESC";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet set = statement.executeQuery();
@@ -58,7 +59,7 @@ public class PostDAO extends DBContext {
         List<String> idList = getUserRelationship(uid);
         idList.add(uid);
         for (String friendId : idList) {
-            String query = "SELECT * FROM [Post] WHERE [uid]=?";
+            String query = "SELECT * FROM [Post] WHERE [uid]=? ORDER BY [time] DESC";
             try {
                 PreparedStatement statement = connection.prepareStatement(query);
                 statement.setString(1, friendId);
@@ -80,7 +81,7 @@ public class PostDAO extends DBContext {
 
     public List<Post> getCurrentUserPost(String uid) {
         List<Post> posts = new ArrayList<>();
-        String query = "SELECT * FROM [Post] WHERE [uid]=?";
+        String query = "SELECT * FROM [Post] WHERE [uid]=? ORDER BY [time] DESC";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, uid);
@@ -105,7 +106,7 @@ public class PostDAO extends DBContext {
             statement.setString(1, p.getId());
             statement.setString(2, p.getUid());
             statement.setString(3, p.getImage());
-            statement.setDate(4, new Date(p.getTime().getTime()));
+            statement.setTimestamp(4, new Timestamp(p.getTime().getTime()));
             statement.setString(5, p.getContent());
             return statement.executeUpdate();
         } catch (SQLException ex) {

@@ -12,6 +12,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -83,7 +84,7 @@ public class CommentDAO extends DBContext {
             statement.setString(2, c.getUid());
             statement.setString(3, c.getPostId());
             statement.setString(4, c.getContent());
-            statement.setDate(5, new Date(c.getTime().getTime()));
+            statement.setTimestamp(5, new Timestamp(c.getTime().getTime()));
             return statement.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(CommentDAO.class.getName()).log(Level.SEVERE, null, ex);

@@ -36,9 +36,10 @@ public class UserDAO extends DBContext {
     }
 
     public User getUser(String id) {
-        String query = "SELECT * FROM [Users] WHERE [id] = " + id;
+        String query = "SELECT * FROM [Users] WHERE [id]=?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, id);
             ResultSet set = statement.executeQuery();
             while (set.next()) {
                 String fullname = set.getString("fullname");
@@ -206,8 +207,23 @@ public class UserDAO extends DBContext {
             statement.setString(4, u.getPhoneNumber());
             statement.setString(5, u.getWebsite());
             statement.setString(6, u.getBiography());
-            statement.setString(7, null);
+            statement.setString(7, u.getAvatar());
             statement.setString(8, id);
+            return statement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+    
+    public int updateAvatar(String id, String avatar){
+        String query = "UPDATE [Users] "
+                + "SET [avatar]=? "
+                + "WHERE [id]=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, avatar);
+            statement.setString(2, id);
             return statement.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);

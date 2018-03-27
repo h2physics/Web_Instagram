@@ -42,6 +42,7 @@ public class ProfileController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         String id = (String) session.getAttribute(Constant.SESSION_ID);
         UserDAO dbUser = new UserDAO();
@@ -78,6 +79,7 @@ public class ProfileController extends HttpServlet {
         User user = dbUser.getUser(currentUserId);
         PostDAO dbPost = new PostDAO();
         List<Post> posts = dbPost.getCurrentUserPost(currentUserId);
+        System.out.println("Post size: " + posts.size());
         HttpSession session = request.getSession();
         session.setAttribute(Constant.SESSION_USER, user);
         session.setAttribute(Constant.SESSION_CURRENT_USER_POSTS, posts);
