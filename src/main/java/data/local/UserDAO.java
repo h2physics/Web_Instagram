@@ -89,7 +89,7 @@ public class UserDAO extends DBContext {
     
     public List<User> getUsers(){
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM [Users]";
+        String query = "SELECT * FROM [Users] AS a JOIN [Role] AS b on [a].id=[b].uid WHERE [b].[role]='user'";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet set = statement.executeQuery();

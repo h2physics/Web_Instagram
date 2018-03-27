@@ -27,12 +27,18 @@
                 width: 30%;
                 text-align: right;
                 padding-right: 20px;
+                padding-bottom: 15px;
             }
             .table_content{
                 width: 70%;
             }
             .inputfield{
                 width: 100%;
+                border-radius: 3px;
+                border: 1px solid #ccc;
+                margin-bottom: 15px;
+                padding: 7px;
+                padding-left: 13px;
             }
             strong{
                 text-align: right;
@@ -53,8 +59,8 @@
                             <tr>
                                 <td class="table_title"><img id="avatar" style="background-image: url('../image/default_avatar.jpg')"/></td>
                                 <td class="table_content">
-                                    <p>${u.getUser(id).username}</p>
-                                    <p><a href="#">Update avatar</a></p>
+                                    <p style="font-size: 1.3em; margin-bottom: 0">${u.getUser(id).username}</p>
+                                    <p style="font-size: 0.9em"><a href="#">Update avatar</a></p>
                                 </td>
                             </tr>
                             <tr>
@@ -86,7 +92,7 @@
                             <tr>
                                 <td class="table_title"><strong>Email</strong></td>
                                 <td class="table_content">
-                                    <input type="text" name="txtEmail" value="${u.getUser(id).email}" class="inputfield" readonly/>
+                                    <input type="text" name="txtEmail" value="${u.getUser(id).email}" class="inputfield" readonly style="background-color: #ddd"/>
                                 </td>
                             </tr>
 
@@ -100,13 +106,13 @@
                                 <td class="table_title"><strong>Gender</strong></td>
                                 <td>
                                     <input type="radio" name="txtGender" value="Male" checked/> Male
-                                    <input type="radio" name="txtGender" value="Female"/> Male
+                                    <input type="radio" name="txtGender" value="Female" style="margin-left: 20px;"/> Male
                                 </td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>
-                                    <button type="submit" class="btn btn-success" name="btnUpdate">Update</button>
+                                    <button type="submit" class="btn btn-success" name="btnUpdate"  style="margin-top: 20px;">Update</button>
                                 </td>
                             </tr>
                         </table>

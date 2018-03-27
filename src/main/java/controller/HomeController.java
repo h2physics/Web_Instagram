@@ -62,9 +62,10 @@ public class HomeController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-
+        response.setContentType("text/html;charset=UTF-8");
+        
         HttpSession session = request.getSession();
         String uid = (String) session.getAttribute(Constant.SESSION_ID);
         PostDAO dbPost = new PostDAO();
@@ -101,8 +102,6 @@ public class HomeController extends HttpServlet {
                 Date time = new Date();
                 dbPost.insertPost(new Post(String.valueOf(time.getTime()), uid, actualLink, postContent, time));
                 response.sendRedirect("user/home.jsp");
-//                RequestDispatcher dispatcher = request.getRequestDispatcher("user/home.jsp");
-//                dispatcher.forward(request, response);
             } catch (FileNotFoundException exception) {
                 writer.println("Error upload <br/> " + exception.getMessage());
             } finally {
@@ -125,8 +124,6 @@ public class HomeController extends HttpServlet {
             CommentDAO dbComment = new CommentDAO();
             dbComment.insertComment(comment);
             response.sendRedirect("user/home.jsp");
-//            RequestDispatcher dispatcher = request.getRequestDispatcher("user/home.jsp");
-//            dispatcher.forward(request, response);
         } else if (request.getParameter("friend_id") != null) {
             String friendId = request.getParameter("friend_id");
             UserDAO dbUser = new UserDAO();
@@ -138,11 +135,7 @@ public class HomeController extends HttpServlet {
             response.sendRedirect("user/home.jsp");
         } else {
             response.sendRedirect("user/home.jsp");
-//            RequestDispatcher dispatcher = request.getRequestDispatcher("user/home.jsp");
-//            dispatcher.forward(request, response);
         }
-//        RequestDispatcher dispatcher = request.getRequestDispatcher("user/home.jsp");
-//        dispatcher.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -15,6 +15,8 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js" integrity="sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic" rel="stylesheet">
         <style>
             .header{
                 position: relative
@@ -40,6 +42,9 @@
             .gallery{
                 margin-bottom: 10px;
             }
+            .image-post:hover {
+                cursor: pointer;
+            }
         </style>
     </head>
     <body>
@@ -56,12 +61,14 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="col-md-4">
-                            <h2>${user.username}</h2>
+                            <h2 style="font-family: 'Nanum Gothic', sans-serif;">${user.username}</h2>
                         </div>
                         <div class="col-md-8">
                             <c:if test="${isMe == true}">
-                                <a href="update_profile.jsp" class="follow_button btn btn-default">Setting</a>
-                                <a href="../ProfileController?action=logout" class="logout_button btn btn-default">Log out</a>
+                                <a href="update_profile.jsp" class="follow_button btn btn-default">
+                                    <i class="fas fa-cog"></i> Setting</a>
+                                <a href="../ProfileController?action=logout" type="submit" class="logout_button btn btn-default">
+                                    <i class="fas fa-sign-out-alt"></i> Log out</a>
                             </c:if>
                             <c:if test="${isMe == false}">
                                 <c:if test="${u.checkRelationship(id, user.id) == true}">
@@ -87,12 +94,12 @@
                         </div>
                     </div>
                     <h3>${user.fullname}</h3>
-                    <p>${user.email}</p>
+                    <p><i class="far fa-envelope"></i> ${user.email}</p>
                     <c:if test="${not empty user.website}"> 
-                        <p>${user.website}</p>
+                        <p><i class="fab fa-github"></i> ${user.website}</p>
                     </c:if>
                     <c:if test="${not empty user.phoneNumber}"> 
-                        <p>${user.phoneNumber}</p>
+                        <p><i class="fas fa-phone"></i> ${user.phoneNumber}</p>
                     </c:if>
                     <c:if test="${not empty user.biography}"> 
                         <p>${user.biography}</p>
@@ -102,7 +109,7 @@
             <hr/>
             <div class="content row galerry">
                 <c:forEach var="p" items="${userPosts}">
-                    <div class="col-md-4" style="padding:0.5em;">
+                    <div class="col-md-4 image-post" style="padding:0.5em;">
                         <div style="background-image: url(${p.image}); height: 350px; background-size: cover; background-position: center;"></div>
                     </div>
                 </c:forEach>

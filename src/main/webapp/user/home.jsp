@@ -15,12 +15,25 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js" integrity="sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ" crossorigin="anonymous"></script>
         <style>
+            .author {
+                color: black;
+                text-decoration: none;
+                font-weight: bold;
+            }
+            .author:hover{
+                color: black;
+                text-decoration: none;
+            }
             .content{
                 width: 100%;
             }
             .comment{
-                list-style-type: none
+                padding-left: 20px;
+            }
+            .follow_button{
+                width: 100%;
             }
             #avatar{
                 border-radius: 50%;
@@ -30,7 +43,7 @@
                 background-position: top center;
             }
             #title{
-                margin: 10px;
+                margin: 5px 5px 5px 5px;
             }
             #scrollbar{
                 background-color: white;
@@ -38,8 +51,17 @@
                 height: 400px;
                 overflow: scroll;
             }
-            .follow_button{
+            #inputComment{
                 width: 100%;
+                padding: 12px 20px;
+                margin: 8px 0;
+                box-sizing: border-box;
+            }
+            #buttonComment{
+                height: 48px;
+                background-color: transparent;
+                border: 0;
+                margin-top: 7px;
             }
         </style>
     </head>
@@ -53,50 +75,50 @@
                 <div class="col-md-1">
 
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-6">
                     <c:forEach var="p" items="${posts}">
                         <div class="content" style="margin: 0 auto; border: 1px solid #A0A0A0">
-                            <div class="content" style="padding: 10px; height: 50px">
-                                <ul class="nav navbar-nav">
-                                    <li class="active"><img id="avatar" style="background-image: url('../image/default_avatar.jpg')"/></li>
-
-                                    <li class="active" style="margin-left: 10px; margin-top: 5px">
-                                        <a href="../ProfileController?uid=${p.uid}">${u.getUser(p.uid).fullname}</a>
-                                    </li>
-                                </ul>
+                            <div class="row" style="padding: 15px; height: 70px">
+                                <div class="col-md-1">
+                                    <img id="avatar" style="background-image: url('../image/default_avatar.jpg')"/>
+                                </div>
+                                <div class="col-md-11" style="margin-top: 10px;">
+                                    <a class="author" href="../ProfileController?uid=${p.uid}">${u.getUser(p.uid).fullname}</a>
+                                </div>
                             </div>
                             <c:if test="${not empty p.content}">
                                 <p id="title">${p.content}</p>
                             </c:if>
                             <img src=${p.image} width="100%"/>
-                            <div style="display: inline-block">
-                                <a href="#"><img src="../image/favorite.png" width="25px" height="25px"/></a>
-                                <a href="#"><img src="../image/favorite.png" width="25px" height="25px"/></a>
+                            <div style="display: inline-block; padding: 10px 10px 5px 20px">
+                                <a href="#"><i class="far fa-heart" style="width: 25px; height: 25px"></i></a>
                             </div>
                             <div>
-                                <ul class="comment">
+                                <div class="comment">
                                     <c:forEach var="comment" items="${c.getComments(p.id)}">
-                                        <li>
-                                            <strong>${u.getUser(comment.uid).fullname}</strong>: ${comment.content}
-                                        </li>
+                                        <p><strong>${u.getUser(comment.uid).fullname}</strong>: ${comment.content}</p>
                                     </c:forEach>
-                                </ul>
+                                </div>
 
                                 <form class="navbar-form" action="../HomeController" method="post">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Write comment" name="txtComment">
+                                    <div class="row">
+                                        <div class="col-md-11">
+                                            <input id="inputComment" type="text" placeholder="Write comment" name="txtComment">
+                                        </div>
+                                        <div class="col-md-1" style="padding-left: 0">
+                                            <input type="text" name="txtPostId" value="${p.id}" hidden/>
+                                            <button type="submit" name="btnComment" id="buttonComment"><i class="fas fa-location-arrow" style="width: 25px; height: 25px;"></i></button>
+                                        </div>
                                     </div>
-                                    <input type="text" name="txtPostId" value="${p.id}" hidden/>
-                                    <button type="submit" class="btn btn-default" name="btnComment">Send</button>
                                 </form>
                             </div>
                         </div>
                     </c:forEach>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="row">
                         <div class="col-md-3">
-                            <img id="avatar" style="background-image: url('../image/default_avatar.jpg')"/>
+                            <img id="avatar" style="background-image: url('../image/default_avatar.jpg'); width: 55px; height: 55px; margin-top: 6px;"/>
                         </div>
                         <div class="col-md-9">
                             <h4>${u.getUser(id).username}</h4>
@@ -109,12 +131,12 @@
                             <c:if test="${currentUser.id != id}">
                                 <div class="row" style="margin-top: 10px">
                                     <div class="col-md-3">
-                                        <img id="avatar" style="background-image: url('../image/default_avatar.jpg')"/>
+                                        <img id="avatar" style="background-image: url('../image/default_avatar.jpg'); width: 55px; height: 55px; "/>
                                     </div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-5" style="margin-top: 10px;">
                                         <h4>${currentUser.username}</h4>
                                     </div>
-                                    <div class="col-md-3" style="padding-left: 0; padding-right: 0">
+                                    <div class="col-md-3" style="padding-left: 0; padding-right: 0; margin-top: 10px;">
                                         <c:if test="${u.checkRelationship(id, currentUser.id) == true}">
                                             <a href="../HomeController?friend_id=${currentUser.id}&action=unfollow" class="follow_button btn btn-default">Following</a>
                                         </c:if>
