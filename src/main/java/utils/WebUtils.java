@@ -5,8 +5,11 @@
  */
 package utils;
 
+import data.model.Post;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.List;
 import javax.servlet.http.Part;
 
 /**
@@ -25,13 +28,8 @@ public class WebUtils {
         return "";
     }
     
-    public static Date formatDate(){
-        java.util.Date date = new java.util.Date();
-        System.out.println("Date Util: " + date.toString());
-        Date dateSQL = new Date(date.getTime());
-//        dateSQL.setHours(date.getHours());
-//        dateSQL.setMinutes(date.getMinutes());
-//        dateSQL.setSeconds(date.getSeconds());
-        return dateSQL;
+    public static List<Post> orderPostByTime(List<Post> posts){
+        Collections.sort(posts);
+        return posts;
     }
 }

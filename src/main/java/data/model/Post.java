@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author H2PhySicS
  */
-public class Post {
+public class Post implements Comparable<Post>{
     private String id;
     private String uid;
     private String image;
@@ -68,11 +68,18 @@ public class Post {
 
     @Override
     public String toString() {
-        return "Post{" + "id=" + id + ", uid=" + uid + ", image=" + image + ", time=" + time + '}';
+        return "Post{" + "id=" + id + ", uid=" + uid + ", image=" + image + ", time=" + time.toString() + '}';
     }
-    
-    
-    
-    
+
+    @Override
+    public int compareTo(Post o) {
+        if(this.time.after(o.time)){
+            return -1;
+        } else if(this.time.before(o.time)){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
     
 }

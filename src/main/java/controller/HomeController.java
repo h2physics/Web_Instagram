@@ -139,6 +139,15 @@ public class HomeController extends HttpServlet {
             posts = dbPost.getPosts(uid);
             session.setAttribute(Constant.SESSION_POSTS, posts);
             response.sendRedirect("user/home.jsp");
+        } else if(request.getParameter("post_id") != null){
+            String postId = request.getParameter("post_id");
+            String action = request.getParameter("action");
+            if(action.equalsIgnoreCase(Constant.ACTION_LIKE)){
+                dbPost.likePost(uid, postId);
+            } else if(action.equalsIgnoreCase(Constant.ACTION_UNLIKE)){
+                dbPost.unlikePost(uid, postId);
+            }
+            response.sendRedirect("user/home.jsp");
         } else {
             response.sendRedirect("user/home.jsp");
         }

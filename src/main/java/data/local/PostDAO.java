@@ -8,15 +8,16 @@ package data.local;
 import com.context.DBContext;
 import data.model.Post;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import utils.WebUtils;
 
 /**
  *
@@ -45,13 +46,13 @@ public class PostDAO extends DBContext {
                 String uid = set.getString("uid");
                 String image = set.getString("image");
                 String content = set.getString("content");
-                Date time = set.getDate("time");
+                Date time = set.getTimestamp("time");
                 posts.add(new Post(id, uid, image, content, time));
             }
         } catch (SQLException ex) {
             Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return posts;
+        return WebUtils.orderPostByTime(posts);
     }
 
     public List<Post> getPosts(String uid) {
@@ -68,7 +69,7 @@ public class PostDAO extends DBContext {
                     String id = set.getString("id");
                     String image = set.getString("image");
                     String content = set.getString("content");
-                    Date time = set.getDate("time");
+                    Date time = set.getTimestamp("time");
                     posts.add(new Post(id, friendId, image, content, time));
                 }
             } catch (SQLException ex) {
@@ -76,7 +77,7 @@ public class PostDAO extends DBContext {
             }
         }
 
-        return posts;
+        return WebUtils.orderPostByTime(posts);
     }
 
     public List<Post> getCurrentUserPost(String uid) {
@@ -90,13 +91,13 @@ public class PostDAO extends DBContext {
                 String id = set.getString("id");
                 String image = set.getString("image");
                 String content = set.getString("content");
-                Date time = set.getDate("time");
+                Date time = set.getTimestamp("time");
                 posts.add(new Post(id, uid, image, content, time));
             }
         } catch (SQLException ex) {
             Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return posts;
+        return WebUtils.orderPostByTime(posts);
     }
 
     public int insertPost(Post p) {
@@ -135,5 +136,49 @@ public class PostDAO extends DBContext {
             Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
+    }
+    
+    public int likePost(String uid, String postId){
+        String query = "INSERT INTO [Favorite] VALUES(?, ?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, uid);
+            statement.setString(2, postId);
+            return statement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+    
+    public int unlikePost(String uid, String postId){
+        String query = "DELETE FROM [Favorite] WHERE [uid]=? AND [post_id]=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, uid);
+            statement.setString(2, postId);
+            return statement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+    
+    public boolean checkLikePost(String uid, String postId){
+        String query = "SELECT * FROM [Favorite] WHERE [uid]=? AND [post_id]=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, uid);
+            statement.setString(2, postId);
+            ResultSet set = statement.executeQuery();
+            set.next();
+            int row = set.getRow();
+            if(row > 0){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 }

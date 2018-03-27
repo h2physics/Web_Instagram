@@ -11,6 +11,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Header</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js" integrity="sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ"
+        crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css?family=Satisfy" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <style>
@@ -30,7 +33,7 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid" style="position: relative">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="../HomeController">Instagram</a>
+                    <a class="navbar-brand" href="../HomeController" style="padding-top: 7px;"><h2 style="text-align: center; font-family: 'Satisfy', cursive; font-size: 2em; color:black; margin: 0 0 0 0;">Instagram</h2></a>
                 </div>
 
                 <form class="navbar-form navbar-left" style="margin-left: 100px" action="../HomeController" method="post">

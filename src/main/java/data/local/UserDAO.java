@@ -267,7 +267,7 @@ public class UserDAO extends DBContext {
     
     public int unfollow(String uid, String friendId){
         System.out.println("Unfollow");
-        String query = "DELETE [Relationship] WHERE [uid]=? AND [friend_id]=?";
+        String query = "DELETE FROM [Relationship] WHERE [uid]=? AND [friend_id]=?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, uid);

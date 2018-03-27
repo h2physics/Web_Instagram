@@ -36,6 +36,8 @@ public class Constant {
     public static final String ACTION_RELATIONSHIP = "rela";
     public static final String ACTION_FAVORITE = "favorite";
     public static final String ACTION_LOGOUT = "logout";
+    public static final String ACTION_LIKE = "like";
+    public static final String ACTION_UNLIKE = "unlike";
     
     public static final String ROLE_USER = "user";
     public static final String ROLE_ADMIN = "admin";

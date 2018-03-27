@@ -66,8 +66,9 @@
         </style>
     </head>
     <body>
-        <jsp:useBean id="u" class="data.local.UserDAO"/>
-        <jsp:useBean id="c" class="data.local.CommentDAO"/>
+        <jsp:useBean id="userBean" class="data.local.UserDAO"/>
+        <jsp:useBean id="commentBean" class="data.local.CommentDAO"/>
+        <jsp:useBean id="postBean" class="data.local.PostDAO"/>
         <div class="container">
             <jsp:include page="menu.jsp"/>
 
@@ -80,15 +81,15 @@
                         <div class="content" style="margin: 0 auto; border: 1px solid #A0A0A0">
                             <div class="row" style="padding: 15px; height: 70px">
                                 <div class="col-md-1">
-                                    <c:if test="${u.getUser(p.uid).avatar == null}">
+                                    <c:if test="${userBean.getUser(p.uid).avatar == null}">
                                         <img id="avatar" style="background-image: url('../image/default_avatar.png')"/>
                                     </c:if>
-                                    <c:if test="${u.getUser(p.uid).avatar != null}">
-                                        <img id="avatar" style="background-image: url('${u.getUser(p.uid).avatar}')"/>
+                                    <c:if test="${userBean.getUser(p.uid).avatar != null}">
+                                        <img id="avatar" style="background-image: url('${userBean.getUser(p.uid).avatar}')"/>
                                     </c:if>
                                 </div>
                                 <div class="col-md-11" style="margin-top: 10px;">
-                                    <a class="author" href="../ProfileController?uid=${p.uid}">${u.getUser(p.uid).fullname}</a>
+                                    <a class="author" href="../ProfileController?uid=${p.uid}">${userBean.getUser(p.uid).fullname}</a>
                                 </div>
                             </div>
                             <c:if test="${not empty p.content}">
@@ -96,12 +97,17 @@
                             </c:if>
                             <img src=${p.image} width="100%"/>
                             <div style="display: inline-block; padding: 10px 10px 5px 20px">
-                                <a href="#"><i class="far fa-heart" style="width: 25px; height: 25px"></i></a>
+                                <c:if test="${postBean.checkLikePost(id, p.id) == true}">
+                                    <a href="../HomeController?post_id=${p.id}&action=unlike"><i class="fas fa-heart" style="width: 25px; height: 25px"></i></a>
+                                </c:if>
+                                    <c:if test="${postBean.checkLikePost(id, p.id) == false}">
+                                    <a href="../HomeController?post_id=${p.id}&action=like"><i class="far fa-heart" style="width: 25px; height: 25px"></i></a>
+                                </c:if>
                             </div>
                             <div>
                                 <div class="comment">
-                                    <c:forEach var="comment" items="${c.getComments(p.id)}">
-                                        <p><strong>${u.getUser(comment.uid).fullname}</strong>: ${comment.content}</p>
+                                    <c:forEach var="comment" items="${commentBean.getComments(p.id)}">
+                                        <p><strong>${userBean.getUser(comment.uid).fullname}</strong>: ${comment.content}</p>
                                     </c:forEach>
                                 </div>
 
@@ -123,21 +129,21 @@
                 <div class="col-md-4">
                     <div class="row">
                         <div class="col-md-3">
-                            <c:if test="${u.getUser(id).avatar == null}">
+                            <c:if test="${userBean.getUser(id).avatar == null}">
                                 <img id="avatar" style="background-image: url('../image/default_avatar.png'); width: 55px; height: 55px; margin-top: 6px;"/>
                             </c:if>
-                            <c:if test="${u.getUser(id).avatar != null}">
-                                <img id="avatar" style="background-image: url('${u.getUser(id).avatar}'); width: 55px; height: 55px; margin-top: 6px;"/>
+                            <c:if test="${userBean.getUser(id).avatar != null}">
+                                <img id="avatar" style="background-image: url('${userBean.getUser(id).avatar}'); width: 55px; height: 55px; margin-top: 6px;"/>
                             </c:if>
                         </div>
                         <div class="col-md-9">
-                            <h4>${u.getUser(id).username}</h4>
-                            <p>${u.getUser(id).fullname}</p>
+                            <h4>${userBean.getUser(id).username}</h4>
+                            <p>${userBean.getUser(id).fullname}</p>
                         </div>
                     </div>
                     <hr/>
                     <div id="scrollbar">
-                        <c:forEach var="currentUser" items="${u.users}">
+                        <c:forEach var="currentUser" items="${userBean.users}">
                             <c:if test="${currentUser.id != id}">
                                 <div class="row" style="margin-top: 10px">
                                     <div class="col-md-3">
@@ -152,10 +158,10 @@
                                         <h4>${currentUser.username}</h4>
                                     </div>
                                     <div class="col-md-3" style="padding-left: 0; padding-right: 0; margin-top: 10px;">
-                                        <c:if test="${u.checkRelationship(id, currentUser.id) == true}">
+                                        <c:if test="${userBean.checkRelationship(id, currentUser.id) == true}">
                                             <a href="../HomeController?friend_id=${currentUser.id}&action=unfollow" class="follow_button btn btn-default">Following</a>
                                         </c:if>
-                                        <c:if test="${u.checkRelationship(id, currentUser.id) == false}">
+                                        <c:if test="${userBean.checkRelationship(id, currentUser.id) == false}">
                                             <a href="../HomeController?friend_id=${currentUser.id}&action=follow" class="follow_button btn btn-default">Follow</a>
                                         </c:if>
                                     </div>
