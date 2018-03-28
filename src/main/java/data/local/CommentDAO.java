@@ -34,6 +34,22 @@ public class CommentDAO extends DBContext {
         }
     }
 
+    public List<Comment> deleteComment(String commentId) {
+        List<Comment> comments = new ArrayList<>();
+        String query = "DELETE FROM [Comment] WHERE [id]=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, commentId);
+            statement.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CommentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return comments;
+
+    }
+
     public List<Comment> getComments() {
         List<Comment> comments = new ArrayList<>();
         String query = "SELECT * FROM [Comment]";

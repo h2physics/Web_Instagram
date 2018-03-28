@@ -9,6 +9,7 @@ import data.local.CommentDAO;
 import data.local.PostDAO;
 import data.local.UserDAO;
 import data.model.Comment;
+import data.model.Favorite;
 import data.model.Post;
 import data.model.Relationship;
 import data.model.User;
@@ -72,8 +73,39 @@ public class AdminController extends HttpServlet {
                 List<Relationship> relationships = dbUser.getRelationships();
                 session.setAttribute(Constant.SESSION_ADMIN_RELATIONSHIP, relationships);
             } else if (request.getParameter("action").equalsIgnoreCase(Constant.ACTION_FAVORITE)) {
-
+                PostDAO dbPost = new PostDAO();
+                List<Favorite> favorites = dbPost.getFavorite();
+                session.setAttribute(Constant.SESSION_ADMIN_FAVORITE, favorites);
+            } else if (request.getParameter("action").equalsIgnoreCase("delete")) {
+                if (request.getParameter("commentId") != null) {
+                    CommentDAO dbComment = new CommentDAO();
+                    String commentId = request.getParameter("commentId");
+                    dbComment.deleteComment(commentId);
+                    List<Comment> comments = dbComment.getComments();
+                    session.setAttribute(Constant.SESSION_ADMIN_COMMENT, comments);
+                }
+            } else if (request.getParameter("action").equalsIgnoreCase("unlike")) {
+                if (request.getParameter("postId") != null && request.getParameter("uid") != null) {
+                    PostDAO dbPost = new PostDAO();
+                    String postId = request.getParameter("postId");
+                    String uid = request.getParameter("uid");
+                 //   dbPost.likePost(uid, postId);
+                    dbPost.unlikePost(uid, postId);
+                    List<Favorite> favorites = dbPost.getFavorite();
+                    System.out.println("favorite : " + favorites.size());
+                    session.setAttribute(Constant.SESSION_ADMIN_FAVORITE, favorites);
+                }
+            } else if (request.getParameter("action").equalsIgnoreCase("unfollow")) {
+                if (request.getParameter("friendId") != null && request.getParameter("uid") != null) {
+                    UserDAO dbUser = new UserDAO();
+                    String friendId = request.getParameter("friendId");
+                    String uid = request.getParameter("uid");
+                    dbUser.unfollow(uid, friendId);
+                    List<Relationship> relationships = dbUser.getRelationships();
+                    session.setAttribute(Constant.SESSION_ADMIN_RELATIONSHIP, relationships);
+                }
             }
+
             response.sendRedirect("admin/index.jsp");
         } else {
             session.removeAttribute(Constant.SESSION_ID);
