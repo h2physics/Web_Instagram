@@ -6,6 +6,8 @@
 package data.local;
 
 import com.context.DBContext;
+import data.model.Comment;
+import data.model.Favorite;
 import data.model.Post;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,7 +36,20 @@ public class PostDAO extends DBContext {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+//    public List<Post> deletePost(String postId){
+//         List<Post> post = new ArrayList<>();
+//        String query = "DELETE FROM [Post] WHERE [id]=?";
+//        try {
+//            PreparedStatement statement = connection.prepareStatement(query);
+//            statement.setString(1, postId);
+//            statement.executeUpdate();
+//
+//        } catch (SQLException ex) {
+//            Logger.getLogger(CommentDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//        return post;
+//    }
     public List<Post> getPosts() {
         List<Post> posts = new ArrayList<>();
         String query = "SELECT * FROM [Post] ORDER BY [time] DESC";
@@ -180,5 +195,22 @@ public class PostDAO extends DBContext {
             Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
+    public List<Favorite> getFavorite(){
+        List<Favorite> favorites = new ArrayList<Favorite>();
+        String query = "SELECT * FROM [Favorite]";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet set = statement.executeQuery();
+            while (set.next()) {
+                String uid = set.getString("uid");
+                String postId = set.getString("post_id");
+                favorites.add(new Favorite(uid, postId));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CommentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return favorites;
     }
 }

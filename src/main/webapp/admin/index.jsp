@@ -86,7 +86,7 @@
                 </div>
             </div>
         </nav>
-        
+
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <a href="../AdminController?action=user">User</a>
@@ -101,7 +101,41 @@
                 <div class="row">
                     <c:if test="${not empty adminUsers}">
                         <h1>User database</h1>
-
+                        <div id="addUsers" >
+                            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                                Add User
+                            </button>
+                            <div id="myModal"  class="modal fade" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="Users">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title">Enter your information</h4>
+                                        </div>
+                                        <div class="modal-body" style="width: 600px" >
+                                            <form action="../LoginController" method="post" >
+                                                <div class="form-group">
+                                                    <input type="email" class="form-control" name="emailRegister" placeholder="Email" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" name="fullname" placeholder="Full name" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" name="username" placeholder="Username" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="password" class="form-control" name="passwordRegister" placeholder="Password" />
+                                                </div>
+                                                <p style="text-align: center">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    <button type="submit" name="btnRegister" class="btn btn-primary" align="center">Register</button>
+                                                </p>
+                                            </form>
+                                        </div>                                                          
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                        </div>    
                         <table class="tabledatabase table table-bordered">
                             <tr>
                                 <th>ID</th>
@@ -143,6 +177,7 @@
                                 <th>Image</th>
                                 <th>Time</th>
                                 <th>Content</th>
+                                
                             </tr>
                             <c:forEach var="p" items="${adminPosts}">
                                 <tr>
@@ -151,6 +186,7 @@
                                     <td>${p.image}</td>
                                     <td>${p.time}</td>
                                     <td>${p.content}</td>
+                                    
                                 </tr>
                             </c:forEach>
                         </table>
@@ -164,6 +200,7 @@
                                 <th>Post ID</th>
                                 <th>Content</th>
                                 <th>Time</th>
+                                <th></th>
                             </tr>
                             <c:forEach var="c" items="${adminComments}">
                                 <tr>
@@ -172,6 +209,11 @@
                                     <td>${c.postId}</td>
                                     <td>${c.content}</td>
                                     <td>${c.time}</td>
+                                    <td>
+                                        <a href="../AdminController?commentId=${c.id}&action=delete" class="btn btn-primary btn-lg">
+                                            Delete Comment
+                                        </a>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </table>
@@ -182,11 +224,38 @@
                             <tr>
                                 <th>User</th>
                                 <th>Friend</th>
+                                <th></th>
                             </tr>
                             <c:forEach var="r" items="${adminRelas}">
                                 <tr>
                                     <td>${userBean.getUser(r.uid).username}</td>
                                     <td>${userBean.getUser(r.friendId).username}</td>
+                                    <td>
+                                        <a href="../AdminController?uid=${r.uid}&friendId=${r.friendId}&action=unfollow" class="btn btn-primary btn-lg">
+                                            Unfollow Users
+                                        </a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                    </c:if>
+                    <c:if test="${not empty adminFavorites}">
+                        <h1>Favorites database</h1>
+                        <table class="tabledatabase table table-bordered">
+                            <tr>
+                                <th>ID</th>
+                                <th>Post</th>
+                                <th></th>
+                            </tr>
+                            <c:forEach var="f" items="${adminFavorites}">
+                                <tr>
+                                    <td>${userBean.getUser(f.uid).username}</td>
+                                    <td>${f.postId}</td>
+                                    <td>
+                                        <a href="../AdminController?uid=${f.uid}&postId=${f.postId}&action=unlike" class="btn btn-primary btn-lg">
+                                            Unlike Post
+                                        </a>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </table>
