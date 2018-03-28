@@ -76,8 +76,8 @@
         </style>
     </head>
     <body>
+        <jsp:include page="menu.jsp"/>
         <div class="container">
-            <jsp:include page="menu.jsp"/>
             <jsp:useBean id="u" class="data.local.UserDAO"/>
             
             <div class="row">

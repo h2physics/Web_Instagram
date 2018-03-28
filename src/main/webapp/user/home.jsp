@@ -46,7 +46,7 @@
                 margin: 5px 5px 5px 5px;
             }
             #scrollbar{
-                background-color: white;
+                background-color: #fafafa;
                 width: 100%;
                 height: 400px;
                 overflow: scroll;
@@ -65,20 +65,20 @@
             }
         </style>
     </head>
-    <body>
+    <body style="background-color: #fafafa">
         <jsp:useBean id="userBean" class="data.local.UserDAO"/>
         <jsp:useBean id="commentBean" class="data.local.CommentDAO"/>
         <jsp:useBean id="postBean" class="data.local.PostDAO"/>
+        <jsp:useBean id="utils" class="utils.WebUtils"/>
+        <jsp:include page="menu.jsp"/>
         <div class="container">
-            <jsp:include page="menu.jsp"/>
-
             <div class="row">
                 <div class="col-md-1">
 
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6" style="background-color: white">
                     <c:forEach var="p" items="${posts}">
-                        <div class="content" style="margin: 0 auto; border: 1px solid #A0A0A0">
+                        <div class="content" style="margin: 5px 0 45px 0; border: 1px solid #ECECEC">
                             <div class="row" style="padding: 15px; height: 70px">
                                 <div class="col-md-1">
                                     <c:if test="${userBean.getUser(p.uid).avatar == null}">
@@ -88,8 +88,11 @@
                                         <img id="avatar" style="background-image: url('${userBean.getUser(p.uid).avatar}')"/>
                                     </c:if>
                                 </div>
-                                <div class="col-md-11" style="margin-top: 10px;">
+                                <div class="col-md-7" style="margin-top: 10px;">
                                     <a class="author" href="../ProfileController?uid=${p.uid}">${userBean.getUser(p.uid).fullname}</a>
+                                </div>
+                                <div class="col-md-4" style="margin-top: 10px; text-align: right">
+                                    <span style="text-align: right">${utils.getTimePosted(p.time)}</span>
                                 </div>
                             </div>
                             <c:if test="${not empty p.content}">
@@ -126,7 +129,7 @@
                         </div>
                     </c:forEach>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" style="background-color: #fafafa">
                     <div class="row">
                         <div class="col-md-3">
                             <c:if test="${userBean.getUser(id).avatar == null}">
