@@ -49,9 +49,8 @@
     </head>
     <body>
         <jsp:useBean id="u" class="data.local.UserDAO"/>
+        <jsp:include page="menu.jsp"/>
         <div class="container">
-            <jsp:include page="menu.jsp"/>
-
             <div class="header row">
                 <div class="col-md-4">
                     <p style="text-align: center">
@@ -92,10 +91,10 @@
                             <strong>${fn:length(userPosts)}</strong> posts
                         </div>
                         <div class="col-md-4">
-                            <strong>1025</strong> followers
+                            <strong>${u.getFollowers(id)}</strong> followers
                         </div>
                         <div class="col-md-4">
-                            <strong>480</strong> followings
+                            <strong>${u.getFollowings(id)}</strong> followings
                         </div>
                     </div>
                     <h3>${user.fullname}</h3>

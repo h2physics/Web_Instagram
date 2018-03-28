@@ -289,11 +289,35 @@ public class UserDAO extends DBContext {
         }
     }
     
-    public int insertFavoritePost(String uid, String postId){
+    public int getFollowers(String uid){
+        String query = "SELECT COUNT(*) AS [followers] FROM [Relationship] WHERE [friend_id]=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, uid);
+            ResultSet set = statement.executeQuery();
+            while(set.next()){
+                int followings = set.getInt("followers");
+                return followings;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return -1;
     }
     
-    public int removeFavoritePost(String uid, String postId){
+    public int getFollowings(String uid){
+        String query = "SELECT COUNT(*) AS [followings] FROM [Relationship] WHERE [uid]=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, uid);
+            ResultSet set = statement.executeQuery();
+            while(set.next()){
+                int followings = set.getInt("followings");
+                return followings;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return -1;
     }
     

@@ -31,26 +31,28 @@
     </head>
     <body>
         <nav class="navbar navbar-default">
-            <div class="container-fluid" style="position: relative">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="../HomeController" style="padding-top: 7px;"><h2 style="text-align: center; font-family: 'Satisfy', cursive; font-size: 2em; color:black; margin: 0 0 0 0;">Instagram</h2></a>
-                </div>
-
-                <form class="navbar-form navbar-left" style="margin-left: 100px" action="../HomeController" method="post">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search">
+            <div class="container">
+                <div class="container-fluid" style="position: relative">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="../HomeController" style="padding-top: 7px;"><h2 style="text-align: center; font-family: 'Satisfy', cursive; font-size: 2em; color:black; margin: 0 0 0 0;">Instagram</h2></a>
                     </div>
-                    <button type="submit" class="btn btn-default">Search</button>
-                </form>
 
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="active">
-                        <a style="cursor: pointer" data-toggle="modal" data-target="#postModal"><i class="fas fa-upload" style="width: 20px; height: 20px"></i></a>
+                    <form class="navbar-form navbar-left" style="margin-left: 100px" action="../HomeController" method="post">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search">
+                        </div>
+                        <button type="submit" class="btn btn-default">Search</button>
+                    </form>
 
-                    </li>
-                    <li class="active"><a href="#"><i class="fas fa-heart" style="width: 20px; height: 20px"></i></a></li>
-                    <li class="active"><a href="../ProfileController"><i class="fas fa-user" style="width: 20px; height: 20px"></i></a></li>
-                </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="active">
+                            <a style="cursor: pointer" data-toggle="modal" data-target="#postModal"><i class="fas fa-upload" style="width: 20px; height: 20px"></i></a>
+
+                        </li>
+                        <li class="active"><a href="#"><i class="fas fa-heart" style="width: 20px; height: 20px"></i></a></li>
+                        <li class="active"><a href="../ProfileController"><i class="fas fa-user" style="width: 20px; height: 20px"></i></a></li>
+                    </ul>
+                </div>
             </div>
         </nav>
         <div id="scroll_box">
